@@ -59,9 +59,14 @@ void PieceCreater::write(char* path)
 {
 	int index = 0;
 	for (auto piece : pieces_) {
-		auto name = string(path) + "/piece" + to_string(index++) + ".png";
+		auto name = string(path) + "/piece" + to_string(index++) + ".raw";
+		Mat mat = piece.piece();
 
 		piece.path(name);
-		imwrite(name, piece.piece());
+
+		ofstream stream(name.c_str(), ios::out | ios::binary);
+		stream.write((char*)mat.data, mat.total() * mat.elemSize());
+		stream.close();
+		//imwrite(name, piece.piece());
 	}
 }
