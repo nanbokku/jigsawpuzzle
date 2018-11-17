@@ -1,4 +1,5 @@
 #include "PieceCreater.h"
+#include "GLUtils.h"
 #include <opencv2/opencv.hpp>
 #include <GL/glut.h>
 #include "imgui.h"
@@ -11,40 +12,41 @@ using namespace std;
 bool show_demo_window = false;
 bool show_another_window = true;
 static ImVec4 clear_color = ImVec4(0.45f, 0.55f, 0.60f, 1.00f);
+vector<Piece> pieces;
+vector<GLuint> texIDs;
 
 void gui()
 {
-	//if (show_demo_window) {
-	//	ImGui::ShowDemoWindow(&show_demo_window);
-	//}
-
 	static float f = 0.0f;
 	static int counter = 0;
 
 	ImGui::Begin("Piece Box");
-	
-	ImGui::End();
-
-	ImGui::Begin("Hello world.");
-	//ImGui::Checkbox("Demo Window", &show_demo_window);
-	ImGui::Checkbox("Another Window", &show_another_window);
-
-	ImGui::SliderFloat("float", &f, 0.0f, 1.0f);
-	ImGui::ColorEdit3("clear color", (float*)&clear_color);
-
-	if (ImGui::Button("Button")) counter++;
-	ImGui::SameLine();
-	ImGui::Text("counter = %d", counter);
-
-	ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / ImGui::GetIO().Framerate, ImGui::GetIO().Framerate);
-	ImGui::End();
-
-	if (show_another_window) {
-		ImGui::Begin("Another Window", &show_another_window);
-		ImGui::Text("Hello from another window!");
-		if (ImGui::Button("Close Me")) show_another_window = false;
-		ImGui::End();
+	ImGui::SetWindowSize(ImVec2(850, 650));
+	for (int i = 0; i < texIDs.size(); i++) {
+		ImGui::Image((void*)(intptr_t)texIDs[i], ImVec2(pieces[i].piece().cols, pieces[i].piece().rows));
 	}
+	ImGui::End();
+
+	//ImGui::Begin("Hello world.");
+	////ImGui::Checkbox("Demo Window", &show_demo_window);
+	//ImGui::Checkbox("Another Window", &show_another_window);
+
+	//ImGui::SliderFloat("float", &f, 0.0f, 1.0f);
+	//ImGui::ColorEdit3("clear color", (float*)&clear_color);
+
+	//if (ImGui::Button("Button")) counter++;
+	//ImGui::SameLine();
+	//ImGui::Text("counter = %d", counter);
+
+	//ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / ImGui::GetIO().Framerate, ImGui::GetIO().Framerate);
+	//ImGui::End();
+
+	//if (show_another_window) {
+	//	ImGui::Begin("Another Window", &show_another_window);
+	//	ImGui::Text("Hello from another window!");
+	//	if (ImGui::Button("Close Me")) show_another_window = false;
+	//	ImGui::End();
+	//}
 }
 
 void display()
@@ -74,18 +76,23 @@ void resize(int w, int h)
 	glOrtho(-0.5, (GLdouble)w - 0.5, (GLdouble)h - 0.5, -0.5, -1.0, 1.0);
 }
 
-void init()
+void init(vector<Piece> pieces)
 {
 	glClearColor(0.0, 0.0, 0.0, 1.0);
+
+	texIDs = vector<GLuint>(pieces.size());
+	for (int i = 0; i < texIDs.size(); i++) {
+		GLUtils::ConvertMatToGL(pieces[i].piece(), &texIDs[i]);
+	}
 }
 
 int main(int argc, char* argv[])
 {
 	PieceCreater creater;
-	vector<Piece> pieces;
+	//vector<Piece> pieces;
 
-	//pieces = creater.create("media/rabbit.jpg");
-	//creater.write("media");
+	pieces = creater.create("media/rabbit.jpg");
+	creater.write("media/pieces");
 
 	glutInitWindowSize(800, 600);
 	glutInit(&argc, argv);
@@ -93,8 +100,8 @@ int main(int argc, char* argv[])
 	glutCreateWindow(argv[0]);
 
 	glutDisplayFunc(display);
-	init();
-	glutReshapeFunc(resize);
+	init(pieces);
+	//glutReshapeFunc(resize);
 
 	ImGui::CreateContext();
 	ImGuiIO& io = ImGui::GetIO(); (void)io;

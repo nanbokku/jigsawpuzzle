@@ -31,6 +31,9 @@
     <ClCompile Include="src\imgui_impl_opengl2.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
+    <ClCompile Include="src\GLUtils.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\PieceCreater.h" />
@@ -44,6 +47,7 @@
     <ClInclude Include="src\imstb_truetype.h" />
     <ClInclude Include="src\imgui_impl_freeglut.h" />
     <ClInclude Include="src\imgui_impl_opengl2.h" />
+    <ClInclude Include="src\GLUtils.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
