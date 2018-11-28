@@ -1,16 +1,40 @@
 #include "CVUtils.h"
 
-cv::Mat CVUtils::PinP(const cv::Mat & srcImg, const cv::Mat & smallImg, const int tx, const int ty)
+void setAlpha(cv::Mat& srcMat)
 {
-	//背景画像の作成
-	cv::Mat dstImg;
-	srcImg.copyTo(dstImg);
+	int width = srcMat.cols;
+	int height = srcMat.rows;
 
-	//前景画像の変形行列
-	cv::Mat mat = (cv::Mat_<double>(2, 3) << 1.0, 0.0, tx, 0.0, 1.0, ty);
+	for (int i = 0; i < height; i++) {
+		for (int j = 0; j < width; j++) {
+			cv::Vec4b &p = srcMat.at<cv::Vec4b>(i, j);
+			// a値 = 0のとき 色反転
+			// それ以外はすべて0(ギザギザを解消)
+			if (p[3] == 255) {
+				//p[0] = 255 - p[0];
+				//p[1] = 255 - p[1];
+				//p[2] = 255 - p[2];
+				//p[3] = 255 - p[3];
+			}
+			else {
+				p[0] = 0;
+				p[1] = 0;
+				p[2] = 0;
+				p[3] = 0;
+			}
+		}
+	}
+}
 
-	//アフィン変換の実行
-	cv::warpAffine(smallImg, dstImg, mat, dstImg.size(), CV_INTER_LINEAR, cv::BORDER_TRANSPARENT);
+cv::Mat CVUtils::PinP(const cv::Mat& src, const cv::Mat& overlay, const int tx, const int ty)
+{
+	cv::Mat img = src.clone();
+	cv::Mat mask = overlay.clone();
+	setAlpha(mask);
+	
+	cv::Mat roi(img, cv::Rect(tx, ty, overlay.cols, overlay.rows));
+	overlay.copyTo(roi, mask);
+	setAlpha(img);
 
-	return dstImg;
+	return img;
 }

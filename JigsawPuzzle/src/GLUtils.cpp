@@ -1,7 +1,53 @@
 #include "GLUtils.h"
 #include <iostream>
 
-void GLUtils::ConvertMatToGL(const cv::Mat& src, GLuint* texID)
+void GLUtils::overwriteTexture(const cv::Mat& src, const GLuint& texID)
+{
+	if (src.empty() == true) return;
+
+	glBindTexture(GL_TEXTURE_2D, texID);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+
+	if (src.channels() == 4) {
+		glTexSubImage2D(
+			GL_TEXTURE_2D,
+			0,
+			0, 0,
+			src.cols, src.rows,
+			GL_RGBA,
+			GL_UNSIGNED_BYTE,
+			src.ptr<unsigned char>()
+		);
+	}
+	else if (src.channels() == 3) {
+		glTexSubImage2D(
+			GL_TEXTURE_2D,
+			0,
+			0, 0,
+			src.cols, src.rows,
+			GL_RGB,
+			GL_UNSIGNED_BYTE,
+			src.ptr<unsigned char>()
+		);
+	}
+	else if (src.channels() == 1) {
+		glTexSubImage2D(
+			GL_TEXTURE_2D,
+			0,
+			0, 0,
+			src.cols, src.rows,
+			GL_LUMINANCE,
+			GL_UNSIGNED_BYTE,
+			src.ptr<unsigned char>()
+		);
+	}
+	else {
+		cerr << "other channel !" << endl;
+	}
+}
+
+void GLUtils::convertMatToGL(const cv::Mat& src, GLuint* texID)
 {
 	if (src.empty() == true)
 		return;

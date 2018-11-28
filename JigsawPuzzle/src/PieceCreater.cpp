@@ -19,16 +19,19 @@ vector<Piece> PieceCreater::create(char* img_path)
 	vector<Mat> piece_imgs;
 	vector<Piece> pieces;
 	for (int label = 0; label < label_count; ++label) {
-		int* params = stats.ptr<int>(label);
-		int left = params[ConnectedComponentsTypes::CC_STAT_LEFT];
-		int top = params[ConnectedComponentsTypes::CC_STAT_TOP];
-		int width = params[ConnectedComponentsTypes::CC_STAT_WIDTH];
-		int height = params[ConnectedComponentsTypes::CC_STAT_HEIGHT];
+		int* params1 = stats.ptr<int>(label);
+		int left = params1[ConnectedComponentsTypes::CC_STAT_LEFT];
+		int top = params1[ConnectedComponentsTypes::CC_STAT_TOP];
+		int width = params1[ConnectedComponentsTypes::CC_STAT_WIDTH];
+		int height = params1[ConnectedComponentsTypes::CC_STAT_HEIGHT];
+		double* params2 = centroids.ptr<double>(label);
+		int x = static_cast<int>(params2[0]);
+		int y = static_cast<int>(params2[1]);
 
 		// mat for pieces initialize
 		piece_imgs.push_back(Mat(Size(width, height), CV_8UC4, Scalar(0, 0, 0, 0)));
 
-		Piece piece(label, Point(left, top), Size(width, height));
+		Piece piece(Point(left, top), Point(x,y), Size(width, height));
 		pieces.push_back(piece);
 	}
 
@@ -49,6 +52,7 @@ vector<Piece> PieceCreater::create(char* img_path)
 	}
 
 	for (int label = 0; label < label_count; label++) {
+		if (label == 1) continue; // exclude frame
 		pieces[label].piece(piece_imgs[label]);
 	}
 
