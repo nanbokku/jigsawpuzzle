@@ -148,6 +148,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="src\CVUtils.cpp" />
     <ClCompile Include="src\GLUtils.cpp" />
     <ClCompile Include="src\imgui.cpp" />
     <ClCompile Include="src\imgui_demo.cpp" />
@@ -159,6 +160,7 @@
     <ClCompile Include="src\PieceCreater.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="src\CVUtils.h" />
     <ClInclude Include="src\GLUtils.h" />
     <ClInclude Include="src\imconfig.h" />
     <ClInclude Include="src\imgui.h" />
