@@ -34,7 +34,6 @@ cv::Mat CVUtils::PinP(const cv::Mat& src, const cv::Mat& overlay, const int tx, 
 	
 	cv::Mat roi(img, cv::Rect(tx, ty, overlay.cols, overlay.rows));
 	overlay.copyTo(roi, mask);
-	setAlpha(img);
 
 	return img;
 }

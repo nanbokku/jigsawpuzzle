@@ -14,9 +14,6 @@
 using namespace cv;
 using namespace std;
 
-//bool show_demo_window = false;
-//bool show_another_window = true;
-//static ImVec4 clear_color = ImVec4(0.45f, 0.55f, 0.60f, 1.00f);
 vector<Piece> pieces;
 vector<GLuint> texIDs;
 
@@ -100,17 +97,42 @@ void gui()
 	ImGui::End();
 }
 
+void drawString(const char* str, const float charSize, const int lineWidth, const float x, const float y)
+{
+	glPushMatrix();
+	glTranslatef(x, y, -1.0f);
+
+	glPushMatrix();
+	glPushAttrib(GL_LINE_BIT);
+	glScaled(0.001 * charSize, 0.001 * charSize, 0.01);
+	glLineWidth(lineWidth);
+	while (*str) {
+		glutStrokeCharacter(GLUT_STROKE_ROMAN, *str);
+		++str;
+	}
+	glPopAttrib();
+	glPopMatrix();
+
+	glPopMatrix();
+}
+
 void display()
 {
+	// Start the Dear ImGui frame
 	ImGui_ImplOpenGL2_NewFrame();
 	ImGui_ImplFreeGLUT_NewFrame();
 
 	gui();
 
+	// Rendering
 	ImGui::Render();
-
+	ImGuiIO& io = ImGui::GetIO();
+	glViewport(0, 0, (GLsizei)io.DisplaySize.x, (GLsizei)io.DisplaySize.y);
 	glClearColor(0.0, 0.0, 0.0, 1.0);
 	glClear(GL_COLOR_BUFFER_BIT);
+
+	glColor3f(1.0f, 1.0f, 1.0f);
+	drawString("JIGSAW PUZZLE", 1.5, 30, -0.75f, 0.0f);
 
 	ImGui_ImplOpenGL2_RenderDrawData(ImGui::GetDrawData());
 
@@ -159,8 +181,8 @@ int main(int argc, char* argv[])
 	mt19937 rand;
 	shuffle(pieces.begin() + 1, pieces.end(), rand);
 
-	glutInitWindowSize(1200, 700);
 	glutInit(&argc, argv);
+	glutInitWindowSize(1200, 700);
 	glutInitDisplayMode(GLUT_RGBA | GLUT_DOUBLE | GLUT_MULTISAMPLE);
 	glutCreateWindow(argv[0]);
 
@@ -169,7 +191,6 @@ int main(int argc, char* argv[])
 	//glutReshapeFunc(resize);
 
 	ImGui::CreateContext();
-	ImGuiIO& io = ImGui::GetIO(); (void)io;
 
 	ImGui_ImplFreeGLUT_Init();
 	ImGui_ImplFreeGLUT_InstallFuncs();
