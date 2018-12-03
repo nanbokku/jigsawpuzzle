@@ -4,6 +4,7 @@
 
 #include <opencv2/opencv.hpp>
 #include <GL/glut.h>
+#include <nfd.h>
 #include <random>
 #include <algorithm>
 
@@ -16,6 +17,7 @@ using namespace std;
 
 vector<Piece> pieces;
 vector<GLuint> texIDs;
+char* filepath = "media/rabbit.jpg";
 
 void convertTo(ImVec2& vec2, const Point& point)
 {
@@ -32,12 +34,37 @@ double euclideanDist(const ImVec2& vec1, const ImVec2& vec2)
 
 void gui()
 {
+	// 初めはファイルの選択
+	if(ImGui::BeginMainMenuBar()) {
+		if(ImGui::BeginMenu("File")) {
+			if(ImGui::MenuItem("Open", "CTRL+O")) {
+				nfdchar_t *outPath = NULL;
+				nfdresult_t result = NFD_OpenDialog("png,jpg", NULL, &outPath);
+
+				if (result == NFD_OKAY) {
+					filepath = outPath;
+					delete outPath;
+				}
+			}
+			ImGui::EndMenu();
+		}
+
+		if(ImGui::BeginMenu("HowTo")) {
+			// how to jigsaw puzzle.
+
+			ImGui::EndMenu();
+		}
+
+		ImGui::EndMainMenuBar();
+	}
+
+	// パズル開始
 	int move_from = -1;
-	ImVec2 frame_pos = ImVec2(0, 0);
+	ImVec2 frame_pos = ImVec2(0, 20);
 	frame_pos = ImVec2(frame_pos.x + ImGui::GetWindowContentRegionMin().x, frame_pos.y + ImGui::GetWindowContentRegionMin().y);
 	const int cols = 3;
 
-	ImGui::SetNextWindowPos(ImVec2(805 + ImGui::GetWindowContentRegionMin().x, 0));
+	ImGui::SetNextWindowPos(ImVec2(805 + ImGui::GetWindowContentRegionMin().x, 20));
 	ImGui::SetNextWindowSize(ImVec2(350, 600));
 	ImGui::Begin("Piece Box");
 	for (int i = 1; i < texIDs.size(); i++) {
@@ -60,7 +87,7 @@ void gui()
 	}
 	ImGui::End();
 
-	ImGui::SetNextWindowPos(ImVec2(0, 0));
+	ImGui::SetNextWindowPos(ImVec2(0, 20));
 	ImGui::SetNextWindowSize(ImVec2(805 + ImGui::GetWindowContentRegionMin().x, 600));
 	ImGui::Begin("Puzzle Frame");
 	ImGui::Image((void*)(intptr_t)texIDs[0], ImVec2(pieces[0].piece().cols, pieces[0].piece().rows));
@@ -132,7 +159,7 @@ void display()
 	glClear(GL_COLOR_BUFFER_BIT);
 
 	glColor3f(1.0f, 1.0f, 1.0f);
-	drawString("JIGSAW PUZZLE", 1.5, 30, -0.75f, 0.0f);
+	drawString("JIGSAW PUZZLE", 1.5, 10, -0.75f, 0.0f);
 
 	ImGui_ImplOpenGL2_RenderDrawData(ImGui::GetDrawData());
 
@@ -174,7 +201,7 @@ int main(int argc, char* argv[])
 	PieceCreater creater;
 	//vector<Piece> pieces;
 
-	pieces = creater.create("media/rabbit.jpg");
+	pieces = creater.create(filepath);
 	creater.write("media/pieces");
 
 	// shuffle pieces exclude first element
