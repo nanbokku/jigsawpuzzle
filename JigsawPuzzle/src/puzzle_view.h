@@ -16,7 +16,7 @@ public:
 	void draw();
 	void update() override;
 
-	__event void onDropped(const ImVec2& pos, const ImVec2& dest, const int label);
+	__event void onDropped(const void* mouse_pos, const void* frame_pos, int label);
 	__event void onFileOpened(const char* name);
 
 private:
@@ -28,5 +28,5 @@ private:
 
 	PuzzleModel* model_;
 
-	static PuzzleView* instance_;	// for callback
+	static PuzzleView* instance;	// for callback
 };

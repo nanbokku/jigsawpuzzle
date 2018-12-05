@@ -9,19 +9,19 @@ class Subject
 public:
 	~Subject()
 	{
-		std::vector<Observer>().swap(observers_);
+		std::vector<Observer*>().swap(observers_);
 	}
 	void notify()
 	{
 		for (auto o : observers_) {
-			o.update();
+			o->update();
 		}
 	}
-	void addObserver(Observer observer)
+	void addObserver(Observer* observer)
 	{
 		observers_.push_back(observer);
 	}
 
 private:
-	std::vector<Observer> observers_;
+	std::vector<Observer*> observers_;
 };

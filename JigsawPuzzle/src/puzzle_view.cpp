@@ -8,11 +8,14 @@
 #include "imgui_impl_freeglut.h"
 #include "imgui_impl_opengl2.h"
 
+PuzzleView* PuzzleView::instance;
 
 PuzzleView::PuzzleView(int argc, char** argv, PuzzleModel* model)
 {
-	instance_ = this;
+	PuzzleView::instance = this;
 	model_ = model;
+
+	model_->addObserver(this);
 
 	glutInit(&argc, argv);
 	glutInitWindowSize(1200, 700);
@@ -35,7 +38,7 @@ PuzzleView::PuzzleView(int argc, char** argv, PuzzleModel* model)
 
 PuzzleView::~PuzzleView()
 {
-	delete instance_;
+	delete PuzzleView::instance;
 	delete model_;
 }
 
@@ -171,16 +174,9 @@ void PuzzleView::gui()
 		if (const ImGuiPayload* payload = ImGui::AcceptDragDropPayload("DND_LABEL", target_flags)) {
 			int label = *(const int*)payload->Data;
 			ImVec2 pos = ImGui::GetMousePos();
-			ImVec2 dest;
 
-			CVUtils::convertTo(dest, model_->piece(label).centroid());
-			dest = ImVec2(dest.x + frame_pos.x, dest.y + frame_pos.y);
-
-			double distance = CVUtils::euclideanDist(pos, dest);
-			if (distance < 50.0) {
-				// drop near destination
-				__raise onDropped(pos, dest, label);
-			}
+			// drop near destination
+			__raise onDropped(&pos, &frame_pos, label);
 		}
 		ImGui::EndDragDropTarget();
 	}
@@ -199,9 +195,9 @@ void PuzzleView::setStyle()
 
 void PuzzleView::display_callback()
 {
-	if (instance_ == nullptr) return;
+	if (PuzzleView::instance == nullptr) return;
 
-	instance_->display();
+	PuzzleView::instance->display();
 }
 
 void PuzzleView::update()

@@ -2,7 +2,8 @@
 
 #include "puzzle_view.h"
 #include "puzzle_model.h"
-#include <GL/glut.h>
+
+#include "imgui.h"
 
 [event_receiver(native)]
 class PuzzleController
@@ -11,11 +12,13 @@ public:
 	PuzzleController(PuzzleModel* model, PuzzleView* view);
 	~PuzzleController();
 
-	void onDropped(const ImVec2& pos, const ImVec2& dest, const int label);
+	void onDropped(const void* mouse_pos, const void* frame_pos, int label);
 	void onFileOpened(const char* name);
 
 private:
 	void hookEvents(PuzzleView* p);
+	void unhookEvents(PuzzleView* p);
 
 	PuzzleModel* model_;
+	PuzzleView* view_;
 };
