@@ -35,9 +35,19 @@ double euclideanDist(const ImVec2& vec1, const ImVec2& vec2)
 void gui()
 {
 	// 初めはファイルの選択
-	if(ImGui::BeginMainMenuBar()) {
-		if(ImGui::BeginMenu("File")) {
-			if(ImGui::MenuItem("Open", "CTRL+O")) {
+	if (ImGui::BeginMainMenuBar()) {
+		if (ImGui::BeginMenu("Game")) {
+			if (ImGui::MenuItem("New Game")) {
+			}
+
+			if (ImGui::MenuItem("Exit Game")) {
+			}
+
+			ImGui::EndMenu();
+		}
+
+		if (ImGui::BeginMenu("Options")) {
+			if (ImGui::MenuItem("Open file", "CTRL+O")) {
 				nfdchar_t *outPath = NULL;
 				nfdresult_t result = NFD_OpenDialog("png,jpg", NULL, &outPath);
 
@@ -49,8 +59,10 @@ void gui()
 			ImGui::EndMenu();
 		}
 
-		if(ImGui::BeginMenu("HowTo")) {
-			// how to jigsaw puzzle.
+		if (ImGui::BeginMenu("Help")) {
+			if (ImGui::MenuItem("How to")) {
+				// how to jigsaw puzzle.
+			}
 
 			ImGui::EndMenu();
 		}
@@ -68,7 +80,7 @@ void gui()
 	ImGui::SetNextWindowSize(ImVec2(350, 600));
 	ImGui::Begin("Piece Box");
 	for (int i = 1; i < texIDs.size(); i++) {
-		ImGui::ImageButton((void*)(intptr_t)texIDs[i], ImVec2(pieces[i].piece().cols, pieces[i].piece().rows));
+		ImGui::ImageButton((void*)(intptr_t)texIDs[i], ImVec2(pieces[i].mat().cols, pieces[i].mat().rows));
 
 		if (i % cols != 0) ImGui::SameLine();
 
@@ -79,7 +91,7 @@ void gui()
 		if (ImGui::BeginDragDropSource(src_flags)) {
 			if (!(src_flags & ImGuiDragDropFlags_SourceNoPreviewTooltip)) {
 				ImGui::Text("Moving");
-				ImGui::Image((void*)(intptr_t)texIDs[i], ImVec2(pieces[i].piece().cols, pieces[i].piece().rows));
+				ImGui::Image((void*)(intptr_t)texIDs[i], ImVec2(pieces[i].mat().cols, pieces[i].mat().rows));
 			}
 			ImGui::SetDragDropPayload("DND_LABEL", &i, sizeof(int));
 			ImGui::EndDragDropSource();
@@ -90,7 +102,7 @@ void gui()
 	ImGui::SetNextWindowPos(ImVec2(0, 20));
 	ImGui::SetNextWindowSize(ImVec2(805 + ImGui::GetWindowContentRegionMin().x, 600));
 	ImGui::Begin("Puzzle Frame");
-	ImGui::Image((void*)(intptr_t)texIDs[0], ImVec2(pieces[0].piece().cols, pieces[0].piece().rows));
+	ImGui::Image((void*)(intptr_t)texIDs[0], ImVec2(pieces[0].mat().cols, pieces[0].mat().rows));
 
 	if (ImGui::BeginDragDropTarget()) {
 		ImGuiDragDropFlags target_flags = 0;
@@ -114,9 +126,9 @@ void gui()
 
 	if (move_from != -1) {
 		Piece piece = pieces[move_from];
-		Mat new_frame = CVUtils::PinP(pieces[0].piece(), piece.piece(), piece.position().x, piece.position().y);
-		pieces[0].piece(new_frame);
-		GLUtils::overwriteTexture(pieces[0].piece(), texIDs[0]);
+		Mat new_frame = CVUtils::PinP(pieces[0].mat(), piece.mat(), piece.position().x, piece.position().y);
+		pieces[0].mat(new_frame);
+		GLUtils::overwriteTexture(pieces[0].mat(), &texIDs[0]);
 
 		pieces.erase(pieces.begin() + move_from);
 		texIDs.erase(texIDs.begin() + move_from);
@@ -183,7 +195,7 @@ void init(vector<Piece> pieces)
 	// bind texture
 	texIDs = vector<GLuint>(pieces.size());
 	for (int i = 0; i < texIDs.size(); i++) {
-		GLUtils::convertMatToGL(pieces[i].piece(), &texIDs[i]);
+		GLUtils::convertMatToGL(pieces[i].mat(), &texIDs[i]);
 	}
 }
 
@@ -196,40 +208,61 @@ void setStyle()
 	style->Colors[ImGuiCol_Button] = ImVec4(0, 0, 0, 0);
 }
 
+#include "puzzle_model.h"
+#include "puzzle_controller.h"
+#include "puzzle_view.h"
+
 int main(int argc, char* argv[])
 {
 	PieceCreater creater;
-	//vector<Piece> pieces;
 
 	pieces = creater.create(filepath);
 	creater.write("media/pieces");
 
-	// shuffle pieces exclude first element
 	mt19937 rand;
 	shuffle(pieces.begin() + 1, pieces.end(), rand);
 
-	glutInit(&argc, argv);
-	glutInitWindowSize(1200, 700);
-	glutInitDisplayMode(GLUT_RGBA | GLUT_DOUBLE | GLUT_MULTISAMPLE);
-	glutCreateWindow(argv[0]);
+	PuzzleModel model = PuzzleModel(filepath, pieces);
+	PuzzleView view = PuzzleView(argc, argv, &model);
+	PuzzleController controller = PuzzleController(&model, &view);
 
-	glutDisplayFunc(display);
-	init(pieces);
-	//glutReshapeFunc(resize);
-
-	ImGui::CreateContext();
-
-	ImGui_ImplFreeGLUT_Init();
-	ImGui_ImplFreeGLUT_InstallFuncs();
-	ImGui_ImplOpenGL2_Init();
-
-	setStyle();
-
-	glutMainLoop();
-
-	ImGui_ImplOpenGL2_Shutdown();
-	ImGui_ImplFreeGLUT_Shutdown();
-	ImGui::DestroyContext();
-
-	return 0;
+	view.draw();
 }
+
+//int main(int argc, char* argv[])
+//{
+//	PieceCreater creater;
+//	//vector<Piece> pieces;
+//
+//	pieces = creater.create(filepath);
+//	creater.write("media/pieces");
+//
+//	// shuffle pieces exclude first element
+//	mt19937 rand;
+//	shuffle(pieces.begin() + 1, pieces.end(), rand);
+//
+//	glutInit(&argc, argv);
+//	glutInitWindowSize(1200, 700);
+//	glutInitDisplayMode(GLUT_RGBA | GLUT_DOUBLE | GLUT_MULTISAMPLE);
+//	glutCreateWindow(argv[0]);
+//
+//	glutDisplayFunc(display);
+//	init(pieces);
+//	//glutReshapeFunc(resize);
+//
+//	ImGui::CreateContext();
+//
+//	ImGui_ImplFreeGLUT_Init();
+//	ImGui_ImplFreeGLUT_InstallFuncs();
+//	ImGui_ImplOpenGL2_Init();
+//
+//	setStyle();
+//
+//	glutMainLoop();
+//
+//	ImGui_ImplOpenGL2_Shutdown();
+//	ImGui_ImplFreeGLUT_Shutdown();
+//	ImGui::DestroyContext();
+//
+//	return 0;
+//}

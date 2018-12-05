@@ -1,11 +1,11 @@
 #include "GLUtils.h"
 #include <iostream>
 
-void GLUtils::overwriteTexture(const cv::Mat& src, const GLuint& texID)
+void GLUtils::overwriteTexture(const cv::Mat& src, GLuint* texID)
 {
 	if (src.empty() == true) return;
 
-	glBindTexture(GL_TEXTURE_2D, texID);
+	glBindTexture(GL_TEXTURE_2D, *texID);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 

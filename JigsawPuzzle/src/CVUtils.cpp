@@ -1,5 +1,18 @@
 #include "CVUtils.h"
 
+void CVUtils::convertTo(ImVec2& vec2, const cv::Point& point)
+{
+	vec2 = ImVec2(point.x, point.y);
+}
+
+double CVUtils::euclideanDist(const ImVec2& vec1, const ImVec2& vec2)
+{
+	auto x = vec1.x - vec2.x;
+	auto y = vec1.y - vec2.y;
+
+	return sqrt(x * x + y * y);
+}
+
 void setAlpha(cv::Mat& srcMat)
 {
 	int width = srcMat.cols;

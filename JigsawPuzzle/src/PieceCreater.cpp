@@ -53,7 +53,7 @@ vector<Piece> PieceCreater::create(char* img_path)
 
 	for (int label = 0; label < label_count; label++) {
 		if (label == 1) continue; // exclude frame
-		pieces[label].piece(piece_imgs[label]);
+		pieces[label].mat(piece_imgs[label]);
 	}
 
 	return pieces_ = vector<Piece>(pieces);
@@ -64,13 +64,13 @@ void PieceCreater::write(char* path)
 	int index = 0;
 	for (auto piece : pieces_) {
 		auto name = string(path) + "/piece" + to_string(index++) + ".raw";
-		Mat mat = piece.piece();
+		Mat mat = piece.mat();
 
 		piece.path(name);
 
 		ofstream stream(name.c_str(), ios::out | ios::binary);
 		stream.write((char*)mat.data, mat.total() * mat.elemSize());
 		stream.close();
-		//imwrite(name, piece.piece());
+		//imwrite(name, piece.mat());
 	}
 }

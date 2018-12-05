@@ -37,6 +37,15 @@
     <ClCompile Include="src\CVUtils.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
+    <ClCompile Include="src\puzzle_model.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="src\puzzle_view.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="src\puzzle_controller.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\PieceCreater.h" />
@@ -52,6 +61,11 @@
     <ClInclude Include="src\imgui_impl_opengl2.h" />
     <ClInclude Include="src\GLUtils.h" />
     <ClInclude Include="src\CVUtils.h" />
+    <ClInclude Include="src\puzzle_model.h" />
+    <ClInclude Include="src\Observer.h" />
+    <ClInclude Include="src\Subject.h" />
+    <ClInclude Include="src\puzzle_view.h" />
+    <ClInclude Include="src\puzzle_controller.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
