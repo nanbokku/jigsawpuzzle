@@ -10,13 +10,22 @@
 
 PuzzleView* PuzzleView::instance;
 
-PuzzleView::PuzzleView(int argc, char** argv, PuzzleModel* model)
+PuzzleView::PuzzleView(PuzzleModel* model)
 {
 	PuzzleView::instance = this;
 	model_ = model;
 
 	model_->addObserver(this);
+}
 
+PuzzleView::~PuzzleView()
+{
+	delete PuzzleView::instance;
+	delete model_;
+}
+
+void PuzzleView::initialize(int argc, char** argv)
+{
 	glutInit(&argc, argv);
 	glutInitWindowSize(1200, 700);
 	glutInitDisplayMode(GLUT_RGBA | GLUT_DOUBLE | GLUT_MULTISAMPLE);
@@ -34,12 +43,6 @@ PuzzleView::PuzzleView(int argc, char** argv, PuzzleModel* model)
 	ImGui_ImplOpenGL2_Init();
 
 	setStyle();
-}
-
-PuzzleView::~PuzzleView()
-{
-	delete PuzzleView::instance;
-	delete model_;
 }
 
 void PuzzleView::draw()
@@ -143,7 +146,8 @@ void PuzzleView::gui()
 	ImGui::SetNextWindowSize(ImVec2(350, 600));
 	ImGui::Begin("Piece Box");
 	for (int i = 1; i < model_->textureNum(); i++) {
-		ImGui::ImageButton((void*)(intptr_t)model_->texId_ptr(i), ImVec2(model_->piece(i).mat().cols, model_->piece(i).mat().rows));
+		// FIXME: texture‚Ì•\Ž¦
+		ImGui::ImageButton((void*)(intptr_t)model_->texId(i), ImVec2(model_->piece(i).mat().cols, model_->piece(i).mat().rows));
 
 		if (i % cols != 0) ImGui::SameLine();
 
@@ -154,7 +158,7 @@ void PuzzleView::gui()
 		if (ImGui::BeginDragDropSource(src_flags)) {
 			if (!(src_flags & ImGuiDragDropFlags_SourceNoPreviewTooltip)) {
 				ImGui::Text("Moving");
-				ImGui::Image((void*)(intptr_t)model_->texId_ptr(i), ImVec2(model_->piece(i).mat().cols, model_->piece(i).mat().rows));
+				ImGui::Image((void*)(intptr_t)model_->texId(i), ImVec2(model_->piece(i).mat().cols, model_->piece(i).mat().rows));
 			}
 			ImGui::SetDragDropPayload("DND_LABEL", &i, sizeof(int));
 			ImGui::EndDragDropSource();
@@ -165,7 +169,7 @@ void PuzzleView::gui()
 	ImGui::SetNextWindowPos(ImVec2(0, 20));
 	ImGui::SetNextWindowSize(ImVec2(805 + ImGui::GetWindowContentRegionMin().x, 600));
 	ImGui::Begin("Puzzle Frame");
-	ImGui::Image((void*)(intptr_t)model_->texId_ptr(0), ImVec2(model_->piece(0).mat().cols, model_->piece(0).mat().rows));
+	ImGui::Image((void*)(intptr_t)model_->texId(0), ImVec2(model_->piece(0).mat().cols, model_->piece(0).mat().rows));
 
 	if (ImGui::BeginDragDropTarget()) {
 		ImGuiDragDropFlags target_flags = 0;

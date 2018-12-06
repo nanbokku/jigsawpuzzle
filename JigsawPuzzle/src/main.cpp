@@ -223,8 +223,8 @@ int main(int argc, char* argv[])
 	shuffle(pieces.begin() + 1, pieces.end(), rand);
 
 	PuzzleModel model = PuzzleModel(filepath, pieces);
-	PuzzleView view = PuzzleView(argc, argv, &model);
-	PuzzleController controller = PuzzleController(&model, &view);
+	PuzzleView view = PuzzleView(&model);
+	PuzzleController controller = PuzzleController(argc, argv, &model, &view);
 
 	view.draw();
 }

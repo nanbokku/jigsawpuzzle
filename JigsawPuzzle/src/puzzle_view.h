@@ -11,8 +11,9 @@
 class PuzzleView : public Observer
 {
 public:
-	PuzzleView(int argc, char** argv, PuzzleModel* model);
+	PuzzleView(PuzzleModel* model);
 	~PuzzleView();
+	void initialize(int argc, char** argv);
 	void draw();
 	void update() override;
 

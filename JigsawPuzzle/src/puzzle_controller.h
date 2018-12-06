@@ -9,7 +9,7 @@
 class PuzzleController
 {
 public:
-	PuzzleController(PuzzleModel* model, PuzzleView* view);
+	PuzzleController(int argc, char** argv, PuzzleModel* model, PuzzleView* view);
 	~PuzzleController();
 
 	void onDropped(const void* mouse_pos, const void* frame_pos, int label);

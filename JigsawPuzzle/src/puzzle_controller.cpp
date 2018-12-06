@@ -3,10 +3,13 @@
 
 #include "imgui.h"
 
-PuzzleController::PuzzleController(PuzzleModel* model, PuzzleView* view)
+PuzzleController::PuzzleController(int argc, char** argv, PuzzleModel* model, PuzzleView* view)
 {
 	model_ = model;
 	view_ = view;
+
+	view_->initialize(argc, argv);
+	model_->initialize();
 
 	hookEvents(view_);
 }
