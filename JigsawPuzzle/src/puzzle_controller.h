@@ -12,6 +12,8 @@ public:
 	PuzzleController(int argc, char** argv, PuzzleModel* model, PuzzleView* view);
 	~PuzzleController();
 
+	void onInitialized();
+	void onExited();
 	void onDropped(const void* mouse_pos, const void* frame_pos, int label);
 	void onFileOpened(const char* name);
 

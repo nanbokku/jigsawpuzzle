@@ -9,7 +9,6 @@ PuzzleController::PuzzleController(int argc, char** argv, PuzzleModel* model, Pu
 	view_ = view;
 
 	view_->initialize(argc, argv);
-	model_->initialize();
 
 	hookEvents(view_);
 }
@@ -24,13 +23,30 @@ PuzzleController::~PuzzleController()
 
 void PuzzleController::hookEvents(PuzzleView* p)
 {
+	__hook(&PuzzleView::onInitialized, p, &PuzzleController::onInitialized);
+	__hook(&PuzzleView::onExited, p, &PuzzleController::onExited);
 	__hook(&PuzzleView::onDropped, p, &PuzzleController::onDropped);
 	__hook(&PuzzleView::onFileOpened, p, &PuzzleController::onFileOpened);
 }
 
-void PuzzleController::unhookEvents(PuzzleView* p) {
+void PuzzleController::unhookEvents(PuzzleView* p)
+{
+	__unhook(&PuzzleView::onInitialized, p, &PuzzleController::onInitialized);
+	__unhook(&PuzzleView::onExited, p, &PuzzleController::onExited);
 	__unhook(&PuzzleView::onDropped, p, &PuzzleController::onDropped);
 	__unhook(&PuzzleView::onFileOpened, p, &PuzzleController::onFileOpened);
+}
+
+void PuzzleController::onInitialized()
+{
+	model_->isPlaying(true);
+
+	model_->initialize();
+}
+
+void PuzzleController::onExited()
+{
+	exit(0);
 }
 
 void PuzzleController::onDropped(const void* mouse_pos, const void* frame_pos, int label)
@@ -45,9 +61,10 @@ void PuzzleController::onDropped(const void* mouse_pos, const void* frame_pos, i
 
 	if (distance >= 50.0) return;
 
-	model_->put(label);
+	model_->fit(label);
 }
 
 void PuzzleController::onFileOpened(const char* name)
 {
+	model_->initialize(name);
 }

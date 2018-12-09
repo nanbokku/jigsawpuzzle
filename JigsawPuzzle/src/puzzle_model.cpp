@@ -4,20 +4,32 @@
 
 #include <opencv2/opencv.hpp>
 
-PuzzleModel::PuzzleModel(char* filename, const std::vector<Piece>& pieces)
+#include <random>
+#include <algorithm>
+
+PuzzleModel::PuzzleModel(const char* filePath)
 {
-	filename_ = filename;
-	pieces_ = vector<Piece>(pieces);
+	this->filename(filePath);
 }
 
 PuzzleModel::~PuzzleModel()
 {
+	free(filename_);
+
 	std::vector<Piece>().swap(pieces_);
 	std::vector<GLuint>().swap(texIds_);
 }
 
 void PuzzleModel::initialize()
 {
+	auto pieces = creater_.create(filename());
+
+	// shuffle puzzle pieces exclude first piece
+	mt19937 rand;
+	shuffle(pieces.begin() + 1, pieces.end(), rand);
+
+	pieces_ = vector<Piece>(pieces);
+
 	// bind textures
 	texIds_ = std::vector<GLuint>(pieceNum());
 	for (int i = 0; i < textureNum(); i++) {
@@ -25,7 +37,15 @@ void PuzzleModel::initialize()
 	}
 }
 
-void PuzzleModel::put(int label)
+void PuzzleModel::initialize(const char* filePath)
+{
+	filename(filePath);
+
+	// initialize puzzle game
+	initialize();
+}
+
+void PuzzleModel::fit(int label)
 {
 	Piece p = piece(label);
 	cv::Mat new_frame = CVUtils::PinP(piece(0).mat(), p.mat(), p.position().x, p.position().y);

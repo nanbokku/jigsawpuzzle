@@ -101,18 +101,28 @@ void PuzzleView::display()
 
 void PuzzleView::gui()
 {
-	// 初めはファイルの選択
+	// main menu bar
 	if (ImGui::BeginMainMenuBar()) {
 		if (ImGui::BeginMenu("Game")) {
 			if (ImGui::MenuItem("New Game")) {
+				__raise onInitialized();
 			}
 
 			if (ImGui::MenuItem("Exit Game")) {
+				int id = glutGetWindow();
+				glutDestroyWindow(id);
+
+				ImGui_ImplOpenGL2_Shutdown();
+				ImGui_ImplFreeGLUT_Shutdown();
+				ImGui::DestroyContext();
+
+				__raise onExited();
 			}
 
 			ImGui::EndMenu();
 		}
 
+		// FIXME: ファイル選択時エラー
 		if (ImGui::BeginMenu("Options")) {
 			if (ImGui::MenuItem("Open file", "CTRL+O")) {
 				nfdchar_t *outPath = NULL;
@@ -136,7 +146,9 @@ void PuzzleView::gui()
 		ImGui::EndMainMenuBar();
 	}
 
-	// パズル開始
+	if (model_->isPlaying() == false) return;
+
+	// show puzzle pieces
 	int move_from = -1;
 	ImVec2 frame_pos = ImVec2(0, 20);
 	frame_pos = ImVec2(frame_pos.x + ImGui::GetWindowContentRegionMin().x, frame_pos.y + ImGui::GetWindowContentRegionMin().y);

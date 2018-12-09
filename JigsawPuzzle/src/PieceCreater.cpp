@@ -3,6 +3,15 @@
 using namespace cv;
 using namespace std;
 
+PieceCreater::PieceCreater()
+{
+}
+
+PieceCreater::~PieceCreater()
+{
+	vector<Piece>().swap(pieces_);
+}
+
 vector<Piece> PieceCreater::create(char* img_path)
 {
 	Mat frame = imread("media/jigsaw_small.png", IMREAD_GRAYSCALE);

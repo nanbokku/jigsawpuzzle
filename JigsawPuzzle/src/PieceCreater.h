@@ -6,6 +6,9 @@
 class PieceCreater
 {
 public:
+	PieceCreater();
+	~PieceCreater();
+
 	std::vector<Piece> create(char* img_path);
 	void write(char* path);
 

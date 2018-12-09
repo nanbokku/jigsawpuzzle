@@ -17,6 +17,8 @@ public:
 	void draw();
 	void update() override;
 
+	__event void onInitialized();
+	__event void onExited();
 	__event void onDropped(const void* mouse_pos, const void* frame_pos, int label);
 	__event void onFileOpened(const char* name);
 
