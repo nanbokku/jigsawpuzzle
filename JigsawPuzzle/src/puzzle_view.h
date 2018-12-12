@@ -12,7 +12,9 @@ class PuzzleView : public Observer
 {
 public:
 	PuzzleView(PuzzleModel* model);
+	PuzzleView(const PuzzleView& view);
 	~PuzzleView();
+
 	void initialize(int argc, char** argv);
 	void draw();
 	void update() override;
@@ -23,13 +25,15 @@ public:
 	__event void onFileOpened(const char* name);
 
 private:
+	PuzzleView& operator=(const PuzzleView& view);
+
 	void drawString(const char* str, const float charSize, const int lineWidth, const float x, const float y);
 	void gui();
 	void display();
 	static void display_callback();
 	void setStyle();
 
-	PuzzleModel* model_;
+	PuzzleModel* model_ = NULL;
 
 	static PuzzleView* instance;	// for callback
 };

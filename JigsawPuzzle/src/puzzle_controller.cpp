@@ -3,22 +3,51 @@
 
 #include "imgui.h"
 
-PuzzleController::PuzzleController(int argc, char** argv, PuzzleModel* model, PuzzleView* view)
+PuzzleController::PuzzleController(int argc, char** argv, PuzzleModel* model, PuzzleView* view) : model_(model), view_(view)
 {
-	model_ = model;
-	view_ = view;
-
 	view_->initialize(argc, argv);
 
 	hookEvents(view_);
+}
+
+PuzzleController::PuzzleController(const PuzzleController& controller)
+{
+	if (model_ != NULL) {
+		delete model_;
+		model_ = NULL;
+	}
+	if (view_ != NULL) {
+		delete view_;
+		view_ = NULL;
+	}
+
+	model_ = new PuzzleModel(*controller.model_);
+	view_ = new PuzzleView(*controller.view_);
 }
 
 PuzzleController::~PuzzleController()
 {
 	unhookEvents(view_);
 
-	delete model_;
-	delete view_;
+	if (model_ != NULL) delete model_;
+	if (view_ != NULL) delete view_;
+}
+
+PuzzleController& PuzzleController::operator=(const PuzzleController& controller)
+{
+	if (model_ != NULL) {
+		delete model_;
+		model_ = NULL;
+	}
+	if (view_ != NULL) {
+		delete view_;
+		view_ = NULL;
+	}
+
+	model_ = new PuzzleModel(*controller.model_);
+	view_ = new PuzzleView(*controller.view_);
+
+	return *this;
 }
 
 void PuzzleController::hookEvents(PuzzleView* p)
@@ -66,5 +95,7 @@ void PuzzleController::onDropped(const void* mouse_pos, const void* frame_pos, i
 
 void PuzzleController::onFileOpened(const char* name)
 {
+	model_->isPlaying(true);
+	
 	model_->initialize(name);
 }

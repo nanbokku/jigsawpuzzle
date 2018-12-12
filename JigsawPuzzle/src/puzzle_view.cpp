@@ -18,10 +18,22 @@ PuzzleView::PuzzleView(PuzzleModel* model)
 	model_->addObserver(this);
 }
 
+PuzzleView::PuzzleView(const PuzzleView& view)
+{
+	if (model_ != NULL) {
+		model_->deleteObserver(this);
+		delete model_;
+		model_ = NULL;
+	}
+
+	model_ = new PuzzleModel(*view.model_);
+
+	model_->addObserver(this);
+}
+
 PuzzleView::~PuzzleView()
 {
-	delete PuzzleView::instance;
-	delete model_;
+	if (model_ != NULL) delete model_;
 }
 
 void PuzzleView::initialize(int argc, char** argv)
@@ -122,7 +134,6 @@ void PuzzleView::gui()
 			ImGui::EndMenu();
 		}
 
-		// FIXME: ファイル選択時エラー
 		if (ImGui::BeginMenu("Options")) {
 			if (ImGui::MenuItem("Open file", "CTRL+O")) {
 				nfdchar_t *outPath = NULL;
@@ -158,7 +169,6 @@ void PuzzleView::gui()
 	ImGui::SetNextWindowSize(ImVec2(350, 600));
 	ImGui::Begin("Piece Box");
 	for (int i = 1; i < model_->textureNum(); i++) {
-		// FIXME: textureの表示
 		ImGui::ImageButton((void*)(intptr_t)model_->texId(i), ImVec2(model_->piece(i).mat().cols, model_->piece(i).mat().rows));
 
 		if (i % cols != 0) ImGui::SameLine();

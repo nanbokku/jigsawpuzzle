@@ -10,7 +10,9 @@ class PuzzleController
 {
 public:
 	PuzzleController(int argc, char** argv, PuzzleModel* model, PuzzleView* view);
+	PuzzleController(const PuzzleController& controller);
 	~PuzzleController();
+	PuzzleController& operator=(const PuzzleController& controller);
 
 	void onInitialized();
 	void onExited();
@@ -21,6 +23,6 @@ private:
 	void hookEvents(PuzzleView* p);
 	void unhookEvents(PuzzleView* p);
 
-	PuzzleModel* model_;
-	PuzzleView* view_;
+	PuzzleModel* model_ = NULL;
+	PuzzleView* view_ = NULL;
 };

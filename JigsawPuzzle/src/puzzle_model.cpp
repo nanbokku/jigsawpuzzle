@@ -12,12 +12,27 @@ PuzzleModel::PuzzleModel(const char* filePath)
 	this->filename(filePath);
 }
 
+PuzzleModel::PuzzleModel(const PuzzleModel& model) : Subject(model)
+{
+	this->filename(model.filename_);
+}
+
 PuzzleModel::~PuzzleModel()
 {
-	free(filename_);
+	delete filename_;
 
 	std::vector<Piece>().swap(pieces_);
 	std::vector<GLuint>().swap(texIds_);
+}
+
+PuzzleModel& PuzzleModel::operator=(const PuzzleModel& model)
+{
+	if (this != &model) {
+		Subject::operator=(model);
+		this->filename(model.filename_);
+	}
+
+	return *this;
 }
 
 void PuzzleModel::initialize()
