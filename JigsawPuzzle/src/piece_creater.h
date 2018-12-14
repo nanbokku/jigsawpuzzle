@@ -10,7 +10,7 @@ public:
 	PieceCreater();
 	~PieceCreater();
 
-	std::vector<Piece> create(char* img_path);
+	std::vector<Piece> create(const char* frame_path, const char* img_path);
 	void write(char* path);
 
 private:

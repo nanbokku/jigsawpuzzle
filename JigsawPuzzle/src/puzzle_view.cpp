@@ -41,7 +41,7 @@ void PuzzleView::initialize(int argc, char** argv)
 	glutInit(&argc, argv);
 	glutInitWindowSize(1200, 700);
 	glutInitDisplayMode(GLUT_RGBA | GLUT_DOUBLE | GLUT_MULTISAMPLE);
-	glutCreateWindow(argv[0]);
+	glutCreateWindow("JIGSAW PUZZLE");
 
 	glClearColor(0.0, 0.0, 0.0, 1.0);
 

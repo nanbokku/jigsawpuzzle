@@ -8,18 +8,21 @@
 #include "cv_utils.h"
 #include "gl_utils.h"
 
-PuzzleModel::PuzzleModel(const char* filePath)
+PuzzleModel::PuzzleModel(const char* frame_path, const char* file_path)
 {
-	this->filename(filePath);
+	this->framename(frame_path);
+	this->filename(file_path);
 }
 
 PuzzleModel::PuzzleModel(const PuzzleModel& model) : Subject(model)
 {
+	this->framename(model.framename_);
 	this->filename(model.filename_);
 }
 
 PuzzleModel::~PuzzleModel()
 {
+	delete framename_;
 	delete filename_;
 
 	std::vector<Piece>().swap(pieces_);
@@ -30,6 +33,7 @@ PuzzleModel& PuzzleModel::operator=(const PuzzleModel& model)
 {
 	if (this != &model) {
 		Subject::operator=(model);
+		this->framename(model.framename_);
 		this->filename(model.filename_);
 	}
 
@@ -38,7 +42,7 @@ PuzzleModel& PuzzleModel::operator=(const PuzzleModel& model)
 
 void PuzzleModel::initialize()
 {
-	auto pieces = creater_.create(filename());
+	auto pieces = creater_.create(framename_, filename());
 
 	// shuffle puzzle pieces exclude first piece
 	mt19937 rand;

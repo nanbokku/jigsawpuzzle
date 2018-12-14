@@ -57,14 +57,14 @@
     <ClInclude Include="src\imgui_impl_freeglut.h" />
     <ClInclude Include="src\imgui_impl_opengl2.h" />
     <ClInclude Include="src\puzzle_model.h" />
-    <ClInclude Include="src\Subject.h" />
     <ClInclude Include="src\puzzle_view.h" />
     <ClInclude Include="src\puzzle_controller.h" />
     <ClInclude Include="src\cv_utils.h" />
     <ClInclude Include="src\gl_utils.h" />
     <ClInclude Include="src\piece_creater.h" />
-    <ClInclude Include="src\Piece.h" />
-    <ClInclude Include="src\Observer.h" />
+    <ClInclude Include="src\observer.h" />
+    <ClInclude Include="src\piece.h" />
+    <ClInclude Include="src\subject.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

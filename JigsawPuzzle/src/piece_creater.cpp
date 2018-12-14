@@ -12,9 +12,9 @@ PieceCreater::~PieceCreater()
 	vector<Piece>().swap(pieces_);
 }
 
-vector<Piece> PieceCreater::create(char* img_path)
+vector<Piece> PieceCreater::create(const char* frame_path, const char* img_path)
 {
-	Mat frame = imread("media/jigsaw_small.png", IMREAD_GRAYSCALE);
+	Mat frame = imread(frame_path, IMREAD_GRAYSCALE);
 	Mat src = imread(img_path, IMREAD_COLOR);
 
 	resize(src, src, Size(frame.cols, frame.rows));
@@ -53,9 +53,10 @@ vector<Piece> PieceCreater::create(char* img_path)
 			Vec4b& pixel = piece_imgs[label].at<Vec4b>(y - position.y, x - position.x);
 
 			// set 255 in alpha channel
-			pixel[0] = color[0];
+			// convert RGB to BGR for opengl image
+			pixel[0] = color[2];
 			pixel[1] = color[1];
-			pixel[2] = color[2];
+			pixel[2] = color[0];
 			pixel[3] = 255;
 		}
 	}

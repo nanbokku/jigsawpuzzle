@@ -2,16 +2,9 @@
 #include "puzzle_controller.h"
 #include "puzzle_view.h"
 
-using namespace cv;
-using namespace std;
-
-vector<Piece> pieces;
-char* filepath = "media/rabbit.jpg";
-
-
 int main(int argc, char* argv[])
 {
-	PuzzleModel model = PuzzleModel(filepath);
+	PuzzleModel model = PuzzleModel(argv[1], argv[2]);
 	PuzzleView view = PuzzleView(&model);
 	PuzzleController controller = PuzzleController(argc, argv, &model, &view);
 
