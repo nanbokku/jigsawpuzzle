@@ -1,11 +1,12 @@
 #include "puzzle_model.h"
-#include "CVUtils.h"
-#include "GLUtils.h"
-
-#include <opencv2/opencv.hpp>
 
 #include <random>
 #include <algorithm>
+
+#include <opencv2/opencv.hpp>
+
+#include "cv_utils.h"
+#include "gl_utils.h"
 
 PuzzleModel::PuzzleModel(const char* filePath)
 {

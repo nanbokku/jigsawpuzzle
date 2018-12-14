@@ -1,11 +1,11 @@
 #pragma once
 
-#include "PieceCreater.h"
-#include "Piece.h"
-#include "Subject.h"
-
 #include <opencv2/opencv.hpp>
 #include <GL/glut.h>
+
+#include "piece_creater.h"
+#include "piece.h"
+#include "subject.h"
 
 class PuzzleModel : public Subject
 {

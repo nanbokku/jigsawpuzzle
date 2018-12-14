@@ -1,9 +1,9 @@
 #pragma once
 
+#include "imgui.h"
+
 #include "puzzle_view.h"
 #include "puzzle_model.h"
-
-#include "imgui.h"
 
 [event_receiver(native)]
 class PuzzleController

@@ -1,11 +1,11 @@
 #pragma once
 
-#include "Observer.h"
-#include "Piece.h"
-#include "puzzle_model.h"
-
 #include <GL/glut.h>
 #include <vector>
+
+#include "observer.h"
+#include "piece.h"
+#include "puzzle_model.h"
 
 [event_source(native)]
 class PuzzleView : public Observer

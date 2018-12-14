@@ -1,7 +1,8 @@
 #include "puzzle_controller.h"
-#include "CVUtils.h"
 
 #include "imgui.h"
+
+#include "cv_utils.h"
 
 PuzzleController::PuzzleController(int argc, char** argv, PuzzleModel* model, PuzzleView* view) : model_(model), view_(view)
 {

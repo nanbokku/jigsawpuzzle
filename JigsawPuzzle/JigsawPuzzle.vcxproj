@@ -148,8 +148,8 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="src\CVUtils.cpp" />
-    <ClCompile Include="src\GLUtils.cpp" />
+    <ClCompile Include="src\cv_utils.cpp" />
+    <ClCompile Include="src\gl_utils.cpp" />
     <ClCompile Include="src\imgui.cpp" />
     <ClCompile Include="src\imgui_demo.cpp" />
     <ClCompile Include="src\imgui_draw.cpp" />
@@ -157,14 +157,14 @@
     <ClCompile Include="src\imgui_impl_opengl2.cpp" />
     <ClCompile Include="src\imgui_widgets.cpp" />
     <ClCompile Include="src\main.cpp" />
-    <ClCompile Include="src\PieceCreater.cpp" />
+    <ClCompile Include="src\piece_creater.cpp" />
     <ClCompile Include="src\puzzle_controller.cpp" />
     <ClCompile Include="src\puzzle_model.cpp" />
     <ClCompile Include="src\puzzle_view.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="src\CVUtils.h" />
-    <ClInclude Include="src\GLUtils.h" />
+    <ClInclude Include="src\cv_utils.h" />
+    <ClInclude Include="src\gl_utils.h" />
     <ClInclude Include="src\imconfig.h" />
     <ClInclude Include="src\imgui.h" />
     <ClInclude Include="src\imgui_impl_freeglut.h" />
@@ -175,8 +175,7 @@
     <ClInclude Include="src\imstb_truetype.h" />
     <ClInclude Include="src\Observer.h" />
     <ClInclude Include="src\Piece.h" />
-    <ClInclude Include="src\PieceCreater.h" />
-    <ClInclude Include="src\Property.h" />
+    <ClInclude Include="src\piece_creater.h" />
     <ClInclude Include="src\puzzle_controller.h" />
     <ClInclude Include="src\puzzle_model.h" />
     <ClInclude Include="src\puzzle_view.h" />

@@ -1,12 +1,12 @@
 #include "puzzle_view.h"
-#include "CVUtils.h"
-#include "Piece.h"
 
 #include <nfd.h>
 
 #include "imgui.h"
 #include "imgui_impl_freeglut.h"
 #include "imgui_impl_opengl2.h"
+
+#include "cv_utils.h"
 
 PuzzleView* PuzzleView::instance;
 

@@ -1,6 +1,7 @@
 #pragma once
 
-#include "Piece.h"
+#include "piece.h"
+
 #include <opencv2/opencv.hpp>
 
 class PieceCreater

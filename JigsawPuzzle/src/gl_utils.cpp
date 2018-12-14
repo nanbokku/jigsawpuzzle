@@ -1,4 +1,5 @@
-#include "GLUtils.h"
+#include "gl_utils.h"
+
 #include <iostream>
 
 void GLUtils::overwriteTexture(const cv::Mat& src, GLuint* texID)

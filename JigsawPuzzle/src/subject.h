@@ -1,8 +1,8 @@
 #pragma once
 
-#include "Observer.h"
-
 #include <vector>
+
+#include "observer.h"
 
 class Subject
 {
